@@ -1,0 +1,24 @@
+# NetBeans project files
+/nbproject/private/
+/build/
+/dist/
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# IDE specific files
+.idea/
+*.iml
+*.iws
+*.ipr
+.settings/
+.classpath
+.project
+
+# System files
+.DS_Store
+Thumbs.db 
