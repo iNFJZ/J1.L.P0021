@@ -26,10 +26,9 @@ public class StudentManagerController {
     }
 
     public void addStudent() {
-        while (studentManager.canContinueAdding()) {
-            Student student = studentInputer.inputStudentInformation();
-            studentManager.addStudent(student);
-        }
+        Student student = new Student();
+        studentInputer.inputCommonInformation(student);
+        studentManager.addStudent(student);
     }
 
     public Student updateOrDelete() throws Exception {
@@ -37,7 +36,7 @@ public class StudentManagerController {
         String choice = ValidationAndNormalizingTextUtil.getStringByRegex("Do you want to update (U) or delete (D) student?", "Please enter U or D only!", "[UuDd]");
         if (choice.equalsIgnoreCase("U")) {
             Student student = studentManager.getStudentById(id);
-            student = studentInputer.inputStudentInformation();
+            studentInputer.inputCommonInformation(student);
             return studentManager.updateStudent(id, student);
         } else {
             return studentManager.deleteStudentById(id);
@@ -51,6 +50,18 @@ public class StudentManagerController {
 
     public List<String> generateReport() {
         return studentManager.generateReport();
+    }
+
+    public boolean canContinueAdding() {
+        return studentManager.canContinueAdding();
+    }
+
+    public int getCurrentStudentCount() {
+        return studentManager.getCurrentStudentCount();
+    }
+
+    public String[] getCourseOptions() {
+        return studentManager.getCourseOptions();
     }
 
 //    public Student addStudent(){

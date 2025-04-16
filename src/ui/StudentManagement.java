@@ -34,7 +34,24 @@ public class StudentManagement {
             int choice = ValidationAndNormalizingTextUtil.getInt(menu, "Must input an integer number!", "Must input an integer in range [1,5]", 1, 5);
             switch (choice) {
                 case 1:
-                    controller.addStudent();
+                    while (true) {
+                        int currentCount = controller.getCurrentStudentCount();
+                        System.out.println("Number of students: " + currentCount);
+                        
+                        if (currentCount >= 10 || !controller.canContinueAdding()) {
+                            if (!ValidationAndNormalizingTextUtil.pressYNtoContinue("Do you want to continue (Y/N)?")) {
+                                break;
+                            }
+                        }
+                        
+                        System.out.println("Course options:");
+                        String[] courses = controller.getCourseOptions();
+                        for (int i = 0; i < courses.length; i++) {
+                            System.out.println((i + 1) + ". " + courses[i]);
+                        }
+                        
+                        controller.addStudent();
+                    }
                     break;
                 case 2:
                     List<Student> foundStudents = controller.searchByName();

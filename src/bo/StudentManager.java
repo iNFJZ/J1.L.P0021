@@ -21,23 +21,28 @@ public class StudentManager {
 
     private List<Student> students;
     private int lastId;
+    private String[] courses;
 
     public StudentManager() {
         students = new ArrayList<>();
         lastId = 0;
+        this.courses = new String[]{"Java", ".Net", "C/C++"};
     }
 
     public StudentManager(List<Student> students) {
         this.students = students;
     }
 
+    public String[] getCourseOptions() {
+        return courses;
+    }
+
     public boolean canContinueAdding() {
-        if (students.size() < 10) {
-            System.out.println("Number of students: " + students.size() + " (Need at least 10 students)");
-            return true;
-        }
-        System.out.println("Number of students: " + students.size());
-        return ValidationAndNormalizingTextUtil.pressYNtoContinue("Do you want to continue (Y/N)?");
+        return students.size() < 10;
+    }
+    
+    public int getCurrentStudentCount() {
+        return students.size();
     }
     
     public boolean addStudent(Student student) {
@@ -82,20 +87,20 @@ public class StudentManager {
 //    }
     
     public List<Student> searchByName(String name) {
-    List<Student> result = new ArrayList<>();
-    for (Student student : students) {
-        if (student.getStudentName().toLowerCase().contains(name.toLowerCase())) {
-            result.add(student);
+        List<Student> result = new ArrayList<>();
+        for (Student student : students) {
+            if (student.getStudentName().toLowerCase().contains(name.toLowerCase())) {
+                result.add(student);
+            }
         }
+        Collections.sort(result, new Comparator<Student>() {
+            @Override
+            public int compare(Student s1, Student s2) {
+                return s1.getStudentName().compareTo(s2.getStudentName());
+            }
+        });
+        return result;
     }
-    Collections.sort(result, new Comparator<Student>() {
-        @Override
-        public int compare(Student s1, Student s2) {
-            return s1.getStudentName().compareTo(s2.getStudentName());
-        }
-    });
-    return result;
-}
 
     public List<String> generateReport() {
         List<String> report = new ArrayList<>();
