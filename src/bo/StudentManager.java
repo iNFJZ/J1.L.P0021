@@ -5,6 +5,7 @@
 package bo;
 
 import entity.Student;
+import entity.Student.Course;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,20 +22,18 @@ public class StudentManager {
 
     private List<Student> students;
     private int lastId;
-    private String[] courses;
 
     public StudentManager() {
         students = new ArrayList<>();
         lastId = 0;
-        this.courses = new String[]{"Java", ".Net", "C/C++"};
     }
 
     public StudentManager(List<Student> students) {
         this.students = students;
     }
 
-    public String[] getCourseOptions() {
-        return courses;
+    public Course[] getCourseOptions() {
+        return Course.values();
     }
 
     public boolean canContinueAdding() {
@@ -106,7 +105,7 @@ public class StudentManager {
         List<String> report = new ArrayList<>();
         for (Student student : students) {
             String studentName = student.getStudentName();
-            String courseName = student.getCourseName();
+            Course courseName = student.getCourseName();
             boolean found = false;
             for (int i = 0; i < report.size(); i++) {
                 String line = report.get(i);

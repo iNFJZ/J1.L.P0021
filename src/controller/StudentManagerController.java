@@ -7,6 +7,7 @@ package controller;
 import bo.StudentInputer;
 import bo.StudentManager;
 import entity.Student;
+import entity.Student.Course;
 import java.util.ArrayList;
 import java.util.List;
 import utils.ValidationAndNormalizingTextUtil;
@@ -25,10 +26,13 @@ public class StudentManagerController {
         studentInputer = new StudentInputer();
     }
 
-    public void addStudent() {
+    public Student addStudent() {
         Student student = new Student();
         studentInputer.inputCommonInformation(student);
-        studentManager.addStudent(student);
+        if (studentManager.addStudent(student)) {
+            return student;
+        };
+        return null;
     }
 
     public Student updateOrDelete() throws Exception {
@@ -60,7 +64,7 @@ public class StudentManagerController {
         return studentManager.getCurrentStudentCount();
     }
 
-    public String[] getCourseOptions() {
+    public Course[] getCourseOptions() {
         return studentManager.getCourseOptions();
     }
 

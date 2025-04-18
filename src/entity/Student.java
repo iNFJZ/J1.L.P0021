@@ -13,12 +13,16 @@ public class Student {
     private int id;
     private String studentName;
     private String semester;
-    private String courseName;
+    private Course courseName;
 
+    public enum Course {
+        JAVA, DOTNET, C
+    }
+    
     public Student() {
     }
 
-    public Student(int id, String studentName, String semester, String courseName) {
+    public Student(int id, String studentName, String semester, Course courseName) {
         this.id = id;
         this.studentName = studentName;
         this.semester = semester;
@@ -49,11 +53,11 @@ public class Student {
         this.semester = semester;
     }
 
-    public String getCourseName() {
+    public Course getCourseName() {
         return courseName;
     }
 
-    public void setCourseName(String courseName) {
+    public void setCourseName(Course courseName) {
         this.courseName = courseName;
     }
 
@@ -61,5 +65,4 @@ public class Student {
     public String toString() {
         return "Student{" + "id=" + id + ", studentName=" + studentName + ", semester=" + semester + ", courseName=" + courseName + '}';
     }
-
 }

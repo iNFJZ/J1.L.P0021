@@ -6,6 +6,7 @@ package ui;
 
 import controller.StudentManagerController;
 import entity.Student;
+import entity.Student.Course;
 import java.util.List;
 import utils.ValidationAndNormalizingTextUtil;
 
@@ -45,7 +46,7 @@ public class StudentManagement {
                         }
                         
                         System.out.println("Course options:");
-                        String[] courses = controller.getCourseOptions();
+                        Course[] courses = controller.getCourseOptions();
                         for (int i = 0; i < courses.length; i++) {
                             System.out.println((i + 1) + ". " + courses[i]);
                         }
