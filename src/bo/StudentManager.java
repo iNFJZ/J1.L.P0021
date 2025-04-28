@@ -21,70 +21,109 @@ import utils.ValidationAndNormalizingTextUtil;
 public class StudentManager {
 
     private List<Student> students;
-    private int lastId;
 
     public StudentManager() {
         students = new ArrayList<>();
-        lastId = 0;
-    }
-
-    public StudentManager(List<Student> students) {
-        this.students = students;
-    }
-
-    public Course[] getCourseOptions() {
-        return Course.values();
     }
 
     public boolean canContinueAdding() {
         return students.size() < 10;
     }
-    
+
     public int getCurrentStudentCount() {
         return students.size();
     }
-    
+
+    public Student getStudentById(String id) {
+        for (Student student : students) {
+            if (student.getId().equalsIgnoreCase(id)) {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    public List<Student> getAllStudentsById(String id) {
+        List<Student> result = new ArrayList<>();
+        for (Student student : students) {
+            if (student.getId().equalsIgnoreCase(id)) {
+                result.add(student);
+            }
+        }
+        return result;
+    }
+
     public boolean addStudent(Student student) {
-        student.setId(++lastId);
         return students.add(student);
     }
 
-    public Student updateStudent(int id, Student student) throws Exception {
-        int index = searchById(id);
-        if (index != -1) {
-            student.setId(id);
-            students.set(index, student);
-            return student;
+    public Student updateStudent(String id, Student updatedStudent) throws Exception {
+        if (getStudentById(id) == null) {
+            throw new Exception("Student does not exist!");
         }
-        throw new Exception("Student not found!");
+
+        List<Student> studentsWithSameId = getAllStudentsById(id);
+
+        if (studentsWithSameId.size() == 1) {
+            Student studentToUpdate = studentsWithSameId.get(0);
+            studentToUpdate.setStudentName(updatedStudent.getStudentName());
+            studentToUpdate.setSemester(updatedStudent.getSemester());
+            studentToUpdate.setCourseName(updatedStudent.getCourseName());
+            return studentToUpdate;
+        }
+
+        // Nếu có nhiều sinh viên với cùng ID
+        // 1. Cập nhật tên cho tất cả sinh viên cùng ID
+        for (Student student : studentsWithSameId) {
+            student.setStudentName(updatedStudent.getStudentName());
+        }
+
+        // 2. Tìm sinh viên cụ thể để cập nhật course và semester
+        Student targetStudent = null;
+        for (Student student : studentsWithSameId) {
+            if (student.getSemester().equalsIgnoreCase(updatedStudent.getSemester())) {
+                targetStudent = student;
+                break;
+            }
+        }
+
+        // Nếu không tìm thấy sinh viên với semester đã cho, lấy sinh viên đầu tiên
+        if (targetStudent == null) {
+            targetStudent = studentsWithSameId.get(0);
+        }
+
+        // 3. Cập nhật course cho sinh viên được chọn
+        targetStudent.setCourseName(updatedStudent.getCourseName());
+
+        // 4. Kiểm tra và cập nhật semester
+        String newSemester = updatedStudent.getSemester();
+        // Kiểm tra xem có sinh viên nào khác với cùng ID và course đã có semester này chưa
+        for (Student student : studentsWithSameId) {
+            if (student != targetStudent
+                    && student.getCourseName() == targetStudent.getCourseName()
+                    && student.getSemester().equalsIgnoreCase(newSemester)) {
+                throw new Exception("Cannot update semester: A student with the same ID and course already has this semester!");
+            }
+        }
+
+        targetStudent.setSemester(newSemester);
+
+        return targetStudent;
     }
 
-    public Student deleteStudentById(int id) throws Exception {
-        int index = searchById(id);
-        if (index != -1) {
-            return students.remove(index);
+    public List<Student> deleteStudentById(String id) throws Exception {
+        List<Student> studentsToDelete = getAllStudentsById(id);
+
+        if (studentsToDelete.isEmpty()) {
+            throw new Exception("Student does not exist!");
         }
-        throw new Exception("Student does not exist!");
+
+        List<Student> deletedStudents = new ArrayList<>(studentsToDelete);
+        students.removeAll(studentsToDelete);
+
+        return deletedStudents;
     }
 
-    public Student getStudentById(int id) throws Exception {
-        int index = searchById(id);
-        if (index != -1) {
-            return students.get(index);
-        }
-        throw new Exception("Id not found");
-    }
-
-//    public List<Student> searchByName(String name) {
-//        ArrayList<Student> result = new ArrayList<>();
-//        for (Student student : students) {
-//            if (student.getStudentName().toLowerCase().contains(name.toLowerCase())) {
-//                result.add(student);
-//            }
-//        }
-//        return result;
-//    }
-    
     public List<Student> searchByName(String name) {
         List<Student> result = new ArrayList<>();
         for (Student student : students) {
@@ -122,18 +161,5 @@ public class StudentManager {
             }
         }
         return report;
-    }
-
-    private int searchById(int id) {
-        for (int index = 0; index < students.size(); index++) {
-            if (students.get(index).getId() == id) {
-                return index;
-            }
-        }
-        return -1;
-    }
-    
-    public List<Student> getStudents(){
-        return students;
     }
 }

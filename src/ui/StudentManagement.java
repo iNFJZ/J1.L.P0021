@@ -38,19 +38,19 @@ public class StudentManagement {
                     while (true) {
                         int currentCount = controller.getCurrentStudentCount();
                         System.out.println("Number of students: " + currentCount);
-                        
+
                         if (currentCount >= 10 || !controller.canContinueAdding()) {
                             if (!ValidationAndNormalizingTextUtil.pressYNtoContinue("Do you want to continue (Y/N)?")) {
                                 break;
                             }
                         }
-                        
+
                         System.out.println("Course options:");
                         Course[] courses = controller.getCourseOptions();
                         for (int i = 0; i < courses.length; i++) {
                             System.out.println((i + 1) + ". " + courses[i]);
                         }
-                        
+
                         controller.addStudent();
                     }
                     break;
@@ -67,9 +67,13 @@ public class StudentManagement {
                     break;
                 case 3:
                     try {
-                        Student result = controller.updateOrDelete();
-                        if (result != null) {
-                            System.out.println("Update or Delete completed successfully");
+                        List<Student> results = controller.updateOrDelete();
+                        if (results != null && !results.isEmpty()) {
+                            if (results.size() == 1) {
+                                System.out.println("Operation completed successfully for 1 student");
+                            } else {
+                                System.out.println("Operation completed successfully for " + results.size() + " students");
+                            }
                         }
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());

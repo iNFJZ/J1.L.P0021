@@ -10,30 +10,54 @@ package entity;
  */
 public class Student {
 
-    private int id;
+    private String id;
     private String studentName;
     private String semester;
     private Course courseName;
 
     public enum Course {
-        JAVA, DOTNET, C
+        JAVA, DOTNET, C;
+
+        public int getIntValue() {
+            switch (this) {
+                case JAVA:
+                    return 0;
+                case DOTNET:
+                    return 1;
+                case C:
+                    return 2;
+            }
+            throw new IndexOutOfBoundsException("Invalid course name!");
+        }
+
+        public static Course getCourseByCourseId(int courseId) {
+            switch (courseId) {
+                case 0:
+                    return JAVA;
+                case 1:
+                    return DOTNET;
+                case 2:
+                    return C;
+            }
+            throw new AssertionError("Invalid course id!");
+        }
     }
-    
+
     public Student() {
     }
 
-    public Student(int id, String studentName, String semester, Course courseName) {
+    public Student(String id, String studentName, String semester, Course courseName) {
         this.id = id;
         this.studentName = studentName;
         this.semester = semester;
         this.courseName = courseName;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -61,8 +85,4 @@ public class Student {
         this.courseName = courseName;
     }
 
-    @Override
-    public String toString() {
-        return "Student{" + "id=" + id + ", studentName=" + studentName + ", semester=" + semester + ", courseName=" + courseName + '}';
-    }
 }
